@@ -20,63 +20,8 @@
 > it cites as verified or unverified.
 
 <p align="center">
-  <img src="docs/before-after.svg" alt="Left: a general assistant answers a beginner's question with twelve unexplained terms, and answers the follow-up with three more. Right: Field Onboarding first asks the reader to mark four prerequisites as used it, learned it, or new." width="960"/>
+  <img src="demo.gif" width="900" alt="Asking about second harmonic generation: the skill lists four prerequisites and asks which ones you have used, then teaches one rung and ends with a check question."/>
 </p>
-
-## Quick navigation
-
-| Section | What it helps with |
-|---|---|
-| [Why this exists](#why-this-exists) | The failure it was built to prevent, and what it deliberately does not do. |
-| [Who this is for](#who-this-is-for) | Whether your situation matches what it was designed around. |
-| [Quick start](#quick-start) | Install it on Claude Code, the Claude apps, ChatGPT Skills, or Codex. |
-| [How to invoke it](#how-to-invoke-it) | The phrasings that reliably trigger it, in English and Chinese. |
-| [What it does differently](#what-it-does-differently) | The four rules that separate it from a long custom instruction. |
-| [Scope](#scope-when-it-fires-and-when-it-does-not) | When it should stay out of the way, and the one-turn test. |
-| [The ladder](#the-ladder) | The five rungs, and how your stated target reshapes them. |
-| [Reference discipline](#reference-discipline) | Why it will not hand you a citation it has not checked. |
-| [Example prompts](#example-prompts) | Copy-paste starting points, including one it should decline. |
-| [Changelog](#changelog) | What changed, and which live session forced each change. |
-| [Citation](#citation) | Cite it in a paper, report, or project doc. |
-
-## Why this exists
-
-**Ask an assistant about a field you do not know, and it will answer at the level
-of someone who already does.** The answer is correct. You cannot use it, and you
-cannot tell which of its twelve terms you were supposed to already know. Ask
-again and you get more terms.
-
-The problem is not that the model knows too little. It is that nobody asked you
-what you know before choosing where to start.
-
-This skill is **not** a knowledge base, and it does not carry a library of field
-summaries. A field-specific corpus goes stale the moment it is written, and
-shipping five fields well would silently degrade every other field. What it
-carries instead is a discipline:
-
-> **locate the reader first, then teach upward from there, one step at a time.**
-
-The model already knows the physics. What it lacks, by default, is the habit of
-asking where you are standing before it starts pointing.
-
-## Who this is for
-
-This is built around a specific situation: **you are competent somewhere, and you
-need to get oriented somewhere else.**
-
-- **Graduate students and postdocs** reading outside their specialty, where the
-  hard part is not intelligence but knowing which of the unfamiliar terms you are
-  allowed to skip.
-- **Researchers evaluating a method** from a neighbouring field, who need to
-  decide whether it fits their problem rather than to master it.
-- **Anyone who has been burned by a fabricated citation**, and wants a reading
-  path where every item is labelled.
-- **Reviewers, examiners, and supervisors** who have to parse a manuscript
-  outside their area.
-
-It is deliberately less useful if you are a specialist asking inside your own
-field, or if you want a one-line factual answer. In both cases it is designed to
-get out of the way. See [Scope](#scope-when-it-fires-and-when-it-does-not).
 
 ## Quick start
 
@@ -113,29 +58,29 @@ I understand nonlinear optics but not topological photonics. Guide me into the f
 A good first response names the prerequisites and asks which ones you already
 have. It does not open with a paragraph of definitions.
 
+## Why this exists
+
+**Ask an assistant about a field you do not know, and it will answer at the level
+of someone who already does.** The answer is correct. You cannot use it, and you
+cannot tell which of its twelve terms you were supposed to already know. Ask
+again and you get more terms.
+
 <p align="center">
-  <img src="demo.gif" width="760" alt="Asking about second harmonic generation: the skill lists four prerequisites and asks which ones you have used before it starts teaching."/>
+  <img src="docs/before-after.svg" alt="Left: a general assistant answers a beginner's question with twelve unexplained terms, and answers the follow-up with three more. Right: Field Onboarding first asks the reader to mark four prerequisites as used it, learned it, or new." width="960"/>
 </p>
 
-## How to invoke it
+The problem is not that the model knows too little. It is that nobody asked you
+what you know before choosing where to start.
 
-Triggering is governed by the `description` in `field-onboarding/SKILL.md`, not
-by a magic word. Anything that signals *I do not know this field yet* should
-work. The reliable patterns:
+This skill is **not** a knowledge base, and it does not carry a library of field
+summaries. A field-specific corpus goes stale the moment it is written, and
+shipping five fields well would silently degrade every other field. What it
+carries instead is a discipline:
 
-- **Name the field and ask to be taken through it.** `Guide me into <field> step
-  by step.` `I'm new to <field> — walk me through it.`
-- **State your bridge.** `I know <what you have> but not <field>.` This is the
-  strongest form: it hands the agent an anchor before it has to ask.
-- **Hand it text.** Paste an abstract, a figure caption, a referee comment, and
-  ask what it is saying.
-- **Ask for a path.** `Give me a reading path into <field>.`
-- **Say the last answer failed.** `That was too technical — start further back.`
-- **Say what it is for.** `I need to build a <setup>, teach me what I need.`
-  The stated target changes the shape and length of every rung, so saying it up
-  front is worth a sentence.
+> **locate the reader first, then teach upward from there, one step at a time.**
 
-Chinese works the same: `一步一步带我入门<领域>`、`这篇摘要看不懂`、`给我一条<领域>的阅读路径`。
+The model already knows the physics. What it lacks, by default, is the habit of
+asking where you are standing before it starts pointing.
 
 ## What it does differently
 
@@ -160,6 +105,61 @@ not retrieved is never attached.
 **4. It knows when to stay out of the way.** Ask a narrow factual question and
 you get a narrow factual answer. The ladder is offered once, in one line, and
 dropped if you do not take it.
+
+## Who this is for
+
+This is built around a specific situation: **you are competent somewhere, and you
+need to get oriented somewhere else.**
+
+- **Graduate students and postdocs** reading outside their specialty, where the
+  hard part is not intelligence but knowing which of the unfamiliar terms you are
+  allowed to skip.
+- **Researchers evaluating a method** from a neighbouring field, who need to
+  decide whether it fits their problem rather than to master it.
+- **Anyone who has been burned by a fabricated citation**, and wants a reading
+  path where every item is labelled.
+- **Reviewers, examiners, and supervisors** who have to parse a manuscript
+  outside their area.
+
+It is deliberately less useful if you are a specialist asking inside your own
+field, or if you want a one-line factual answer. In both cases it is designed to
+get out of the way. See [Scope](#scope-when-it-fires-and-when-it-does-not).
+
+## How to invoke it
+
+Triggering is governed by the `description` in `field-onboarding/SKILL.md`, not
+by a magic word. Anything that signals *I do not know this field yet* should
+work. The reliable patterns:
+
+- **Name the field and ask to be taken through it.** `Guide me into <field> step
+  by step.` `I'm new to <field> — walk me through it.`
+- **State your bridge.** `I know <what you have> but not <field>.` This is the
+  strongest form: it hands the agent an anchor before it has to ask.
+- **Hand it text.** Paste an abstract, a figure caption, a referee comment, and
+  ask what it is saying.
+- **Ask for a path.** `Give me a reading path into <field>.`
+- **Say the last answer failed.** `That was too technical — start further back.`
+- **Say what it is for.** `I need to build a <setup>, teach me what I need.`
+  The stated target changes the shape and length of every rung, so saying it up
+  front is worth a sentence.
+
+Chinese works the same: `一步一步带我入门<领域>`、`这篇摘要看不懂`、`给我一条<领域>的阅读路径`。
+
+## Quick navigation
+
+| Section | What it helps with |
+|---|---|
+| [Why this exists](#why-this-exists) | The failure it was built to prevent, and what it deliberately does not do. |
+| [Who this is for](#who-this-is-for) | Whether your situation matches what it was designed around. |
+| [Quick start](#quick-start) | Install it on Claude Code, the Claude apps, ChatGPT Skills, or Codex. |
+| [How to invoke it](#how-to-invoke-it) | The phrasings that reliably trigger it, in English and Chinese. |
+| [What it does differently](#what-it-does-differently) | The four rules that separate it from a long custom instruction. |
+| [Scope](#scope-when-it-fires-and-when-it-does-not) | When it should stay out of the way, and the one-turn test. |
+| [The ladder](#the-ladder) | The five rungs, and how your stated target reshapes them. |
+| [Reference discipline](#reference-discipline) | Why it will not hand you a citation it has not checked. |
+| [Example prompts](#example-prompts) | Copy-paste starting points, including one it should decline. |
+| [Changelog](#changelog) | What changed, and which live session forced each change. |
+| [Citation](#citation) | Cite it in a paper, report, or project doc. |
 
 ## Scope: when it fires, and when it does not
 
@@ -417,3 +417,4 @@ I most want.
 ## License
 
 MIT License. Copyright (c) 2026 LI Junxiang and Ziyan Zhou (Anna).
+
