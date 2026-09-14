@@ -21,29 +21,24 @@
 
 ## Quick start
 
-**Claude Code** — one command:
+Paste this into your agent, whichever one you use:
+
+```text
+Install the field-onboarding skill from
+https://github.com/ljx-chase/research-field-onboarding, following the
+installation section of the repo's AGENTS.md.
+```
+
+It works out where its own skills directory is. If you would rather do it by
+hand, `AGENTS.md` has the per-agent paths, and on Claude Code there is a
+one-liner:
 
 ```bash
 npx skills add ljx-chase/research-field-onboarding -g
 ```
 
-Or copy `field-onboarding/` into `~/.claude/skills/`. Drop `-g`, or use
-`.claude/skills/`, to scope it to a single project instead.
-
-**Claude apps (claude.ai, Desktop, Cowork)** — desktop and cloud sessions do not
-read `~/.claude/skills/`. Enable the skill on your account instead, via Customize
-in the Desktop sidebar or the skill settings on claude.ai.
-
-**ChatGPT Skills** — use `field-onboarding/` as the skill root, keep `SKILL.md`
-at that root and `agents/openai.yaml` alongside it, and package it with the skill
-packaging tool in your environment.
-
-**Codex or another repository-aware agent** — clone this repository into the
-workspace and keep `AGENTS.md` at the root. It tells the agent when to load the
-workflow.
-
-**Anything else** — hand the agent `field-onboarding/SKILL.md` as its
-instruction file.
+Claude web and ChatGPT want a zip; there is one in
+[releases](https://github.com/ljx-chase/research-field-onboarding/releases).
 
 Then try:
 
@@ -61,9 +56,12 @@ of someone who already does.** The answer is correct. You cannot use it, and you
 cannot tell which of its twelve terms you were supposed to already know. Ask
 again and you get more terms.
 
-<p align="center">
-  <img src="docs/before-after.svg" alt="Left: a general assistant answers a beginner's question with twelve unexplained terms, and answers the follow-up with three more. Right: Field Onboarding first asks the reader to mark four prerequisites as used it, learned it, or new." width="960"/>
-</p>
+| Any assistant | With this skill |
+| --- | --- |
+| **You:** Explain attention in transformers. | **You:** Explain attention in transformers. |
+| Transformers replace recurrence with self-attention, projecting each token into query, key and value vectors, scoring them by dot product, normalizing with softmax, then concatenating multiple heads through a residual connection into a feed-forward block with layer norm and positional encoding. | Before we start: the shortest bridge from what you already know. Mark each one.<br><br>· **Matrix multiplication and dot products** — attention is a stack of matrix operations<br>· **Forward pass of a neural network** — how one layer turns an input into an output<br>· **Softmax and probability normalization** — this is where the attention weights come from<br>· **Embeddings and sequence representation** — how text becomes vectors the model can work on<br><br>`used it` / `learned it` / `new` |
+| **You:** Which of those am I supposed to already know? | |
+| Self-attention maps each token to three learned projections, then takes a similarity-weighted sum over the sequence. | *Twelve terms, gone. It teaches from wherever you actually are, one rung per turn.* |
 
 The problem is not that the model knows too little. It is that nobody asked you
 what you know before choosing where to start.
@@ -78,10 +76,24 @@ carries instead is a discipline:
 The model already knows the physics. What it lacks, by default, is the habit of
 asking where you are standing before it starts pointing.
 
-
 <p align="center">
   <img src="demo.gif" width="900" alt="Asking about second harmonic generation: the skill lists four prerequisites and asks which ones you have used, then teaches one rung and ends with a check question."/>
 </p>
+
+## The rules
+
+Nine rules. Full text in
+[SKILL.md](field-onboarding/SKILL.md).
+
+1. Name the prerequisites yourself, don't ask "what's your background".
+2. Anything marked *used it* is an anchor and never gets explained again.
+3. One rung per turn: motivation, vocabulary, framework, methods, frontier.
+4. End each rung with a question the rung itself answers, not "make sense?".
+5. Say where the analogy breaks, every time you use one.
+6. State which sign, unit or normalization convention you are using.
+7. Verified with a DOI, or labelled "from memory, unverified". No third option.
+8. Say whether the field is settled before teaching it as if it were.
+9. Answer short questions short. Offer the ladder once, then drop it.
 
 ## What it does differently
 
@@ -418,4 +430,3 @@ I most want.
 ## License
 
 MIT License. Copyright (c) 2026 LI Junxiang and Ziyan Zhou (Anna).
-
