@@ -56,12 +56,30 @@ of someone who already does.** The answer is correct. You cannot use it, and you
 cannot tell which of its twelve terms you were supposed to already know. Ask
 again and you get more terms.
 
-| Any assistant | With this skill |
-| --- | --- |
-| **You:** Explain attention in transformers. | **You:** Explain attention in transformers. |
-| Transformers replace recurrence with self-attention, projecting each token into query, key and value vectors, scoring them by dot product, normalizing with softmax, then concatenating multiple heads through a residual connection into a feed-forward block with layer norm and positional encoding. | Before we start: the shortest bridge from what you already know. Mark each one.<br><br>· **Matrix multiplication and dot products** — attention is a stack of matrix operations<br>· **Forward pass of a neural network** — how one layer turns an input into an output<br>· **Softmax and probability normalization** — this is where the attention weights come from<br>· **Embeddings and sequence representation** — how text becomes vectors the model can work on<br><br>`used it` / `learned it` / `new` |
-| **You:** Which of those am I supposed to already know? | |
-| Self-attention maps each token to three learned projections, then takes a similarity-weighted sum over the sequence. | *Twelve terms, gone. It teaches from wherever you actually are, one rung per turn.* |
+### Without it
+
+> **You:** Explain attention in transformers.
+>
+> **Assistant:** Transformers replace recurrence with self-attention, projecting each token into query, key and value vectors, scoring them by dot product, normalizing with softmax, then concatenating multiple heads through a residual connection into a feed-forward block with layer norm and positional encoding.
+>
+> **You:** Which of those am I supposed to already know?
+>
+> **Assistant:** Self-attention maps each token to three learned projections, then takes a similarity-weighted sum over the sequence.
+
+### With it
+
+> **You:** Explain attention in transformers.
+>
+> **Assistant:** Before we start: the shortest bridge from what you already know. Mark each one.
+>
+> - **Matrix multiplication and dot products** — attention is a stack of matrix operations
+> - **Forward pass of a neural network** — how one layer turns an input into an output
+> - **Softmax and probability normalization** — this is where the attention weights come from
+> - **Embeddings and sequence representation** — how text becomes vectors the model can work on
+>
+> `used it` / `learned it` / `new`
+
+*Twelve terms. It asks about four of them instead of throwing all twelve at you at once, then teaches from wherever you actually are, one rung per turn.*
 
 The problem is not that the model knows too little. It is that nobody asked you
 what you know before choosing where to start.
@@ -166,7 +184,7 @@ Chinese works the same: `一步一步带我入门<领域>`、`这篇摘要看不
 | [Who this is for](#who-this-is-for) | Whether your situation matches what it was designed around. |
 | [Quick start](#quick-start) | Install it on Claude Code, the Claude apps, ChatGPT Skills, or Codex. |
 | [How to invoke it](#how-to-invoke-it) | The phrasings that reliably trigger it, in English and Chinese. |
-| [What it does differently](#what-it-does-differently) | The four rules that separate it from a long custom instruction. |
+| [What it does differently](#what-it-does-differently) | The rules, and why each one exists. |
 | [Scope](#scope-when-it-fires-and-when-it-does-not) | When it should stay out of the way, and the one-turn test. |
 | [The ladder](#the-ladder) | The five rungs, and how your stated target reshapes them. |
 | [Reference discipline](#reference-discipline) | Why it will not hand you a citation it has not checked. |
