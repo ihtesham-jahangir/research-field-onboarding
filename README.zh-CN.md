@@ -47,9 +47,30 @@ npx skills add ljx-chase/research-field-onboarding -g
 
 **问一个你不懂的领域，AI 会按懂的人的水平回答你。** 答案是对的。但你用不了，也判断不出那十二个术语里哪些是你本来就该会的。再问一次，只会得到更多术语。
 
-<p align="center">
-  <img src="docs/before-after-zh.svg" alt="左边：普通助手回答一个入门问题，一段话里塞了十二个没有解释的术语，追问之后又冒出三个。右边：Field Onboarding 先让读者把四个前置概念标成用过、学过或没接触。" width="960"/>
-</p>
+### 不使用它
+
+> **你：** 解释一下 Transformer 里的 attention。
+>
+> Transformer 用 self-attention 取代 recurrence，把每个 token 投影成 query、key 和 value 向量，通过点积计算分数，用 softmax 归一化，再把多个 attention head 拼接起来，经 residual connection 送入 feed-forward block，同时配合 layer norm 和 positional encoding。
+>
+> **你：** 这里面哪些是我本来就应该会的？
+>
+> Self-attention 会把每个 token 映射成三个学习得到的投影，然后对整个序列做按相似度加权的求和。
+
+### 使用它
+
+> **你：** 解释一下 Transformer 里的 attention。
+>
+> 开始之前，先找出从你现有知识到 attention 最短的桥。请标记下面每一项：
+>
+> - **矩阵乘法和点积** — attention 本质上是一系列矩阵运算
+> - **神经网络的前向传播** — 一层网络如何把输入变成输出
+> - **Softmax 和概率归一化** — attention 权重从这里产生
+> - **Embedding 和序列表示** — 文本如何变成模型可以处理的向量
+>
+> `用过` / `学过` / `没接触`
+
+*十二个术语，它只问了其中四个，而不是把十二个一次性全甩给你。然后从你实际所在的位置开始，一次只往上讲一级。*
 
 问题不是模型知道得太少，而是没有人在选择起点之前，先问过你知道什么。
 
@@ -105,7 +126,7 @@ npx skills add ljx-chase/research-field-onboarding -g
 | [更适合谁](#更适合谁) | 你的处境是否落在它的设计范围内。 |
 | [快速开始](#快速开始) | 在 Claude Code、Claude 客户端、ChatGPT Skills 或 Codex 上安装。 |
 | [怎么触发](#怎么触发) | 中英文里能可靠触发它的几种句式。 |
-| [它和别的做法有什么不同](#它和别的做法有什么不同) | 让它区别于一条长 prompt 的四条规则。 |
+| [它和别的做法有什么不同](#它和别的做法有什么不同) | 这些规则，以及每一条为什么存在。 |
 | [触发范围](#触发范围) | 它什么时候该闪开，以及 one-turn test。 |
 | [五级阶梯](#五级阶梯) | 五个级别，以及你的目标如何重塑它们。 |
 | [文献纪律](#文献纪律) | 为什么它不会给你一条没查过的引用。 |
