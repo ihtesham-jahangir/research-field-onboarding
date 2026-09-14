@@ -19,10 +19,6 @@
 > an unfamiliar research field, teach one rung at a time, and label every paper
 > it cites as verified or unverified.
 
-<p align="center">
-  <img src="demo.gif" width="900" alt="Asking about second harmonic generation: the skill lists four prerequisites and asks which ones you have used, then teaches one rung and ends with a check question."/>
-</p>
-
 ## Quick start
 
 **Claude Code** — one command:
@@ -81,6 +77,11 @@ carries instead is a discipline:
 
 The model already knows the physics. What it lacks, by default, is the habit of
 asking where you are standing before it starts pointing.
+
+
+<p align="center">
+  <img src="demo.gif" width="900" alt="Asking about second harmonic generation: the skill lists four prerequisites and asks which ones you have used, then teaches one rung and ends with a check question."/>
+</p>
 
 ## What it does differently
 
