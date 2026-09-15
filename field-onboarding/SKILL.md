@@ -149,6 +149,14 @@ comment and mainly wants to understand that passage, use **Decode mode** below
 instead of forcing the intake. Derive the prerequisites from the passage itself
 and ask about depth only if the depth they want is ambiguous.
 
+### Keep state without burdening the user
+
+For a multi-turn ladder, when Python and temporary file access are available,
+load [references/state-runtime.md](references/state-runtime.md) after Step 0 and
+use the bundled state helper invisibly. Never ask the user to run commands,
+manage JSON, or choose storage. If the helper is unavailable, continue with
+conversation state; this capability is optional and must degrade gracefully.
+
 ## When the field is not settled
 
 If the calibration check found the field emerging, contested, or beyond what you
@@ -284,6 +292,7 @@ not up front.
 | `references/search-recipes.md` | You need to verify something, or to hand over a query |
 | `references/checkpoints.md` | Before the first checkpoint |
 | `references/decode-mode.md` | The user supplied text instead of a field |
+| `references/state-runtime.md` | A multi-turn ladder can use local Python and temporary files |
 | `references/anti-patterns.md` | Reviewing your own output |
 | `references/examples.md` | An example would settle how a rule applies |
 | `references/evals.md` | You are changing this skill, not using it |

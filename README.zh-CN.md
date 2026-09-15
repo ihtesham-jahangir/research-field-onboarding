@@ -4,7 +4,7 @@
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"/></a>
-<img src="https://img.shields.io/badge/version-v1.5.0-blue?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-v1.6.0-blue?style=flat-square" alt="Version"/>
 <a href="https://github.com/ljx-chase/research-field-onboarding/stargazers"><img src="https://img.shields.io/github/stars/ljx-chase/research-field-onboarding?style=flat-square&color=yellow" alt="Stars"/></a>
 <img src="https://img.shields.io/github/last-commit/ljx-chase/research-field-onboarding/main?style=flat-square" alt="Last Commit"/>
 </p>
@@ -18,6 +18,16 @@
 > 一个 skill，让 AI 在解释一个陌生领域之前先问你已经会什么，之后一次只讲一级，并且给出的每一篇文献都标注是否核实过。
 
 ## 快速开始
+
+如果你的 agent 能访问 GitHub，直接把这句话发给它：
+
+```text
+安装 field-onboarding skill：
+https://github.com/ljx-chase/research-field-onboarding
+按照仓库 AGENTS.md 的 Installation 部分完成安装并验证。
+```
+
+Agent 会判断自己的 Skill 目录并完成复制和验证。也可以按下面的平台说明手动安装。
 
 **Claude Code** — 一条命令：
 
@@ -34,6 +44,8 @@ npx skills add ljx-chase/research-field-onboarding -g
 **Codex 或其他能读仓库的 agent** — 把本仓库克隆进工作区，保持 `AGENTS.md` 在根目录。它会告诉 agent 何时加载这套流程。
 
 **其他情况** — 直接把 `field-onboarding/SKILL.md` 作为指令文件交给 agent。
+
+安装到这里就结束了。用户不需要运行状态脚本、编辑 JSON 或选择保存路径；有能力的 agent 会在内部自动使用，没有 Python 或文件权限的 agent 会退回原来的纯 prompt 流程。
 
 装好后试试：
 
@@ -202,6 +214,8 @@ research-field-onboarding/
     ├── SKILL.md                # 唯一的正典指令文档
     ├── agents/
     │   └── openai.yaml
+    ├── scripts/
+    │   └── knowledge_state.py  # 可选、对用户不可见的会话状态工具
     └── references/
         ├── examples.md         # 正向与负向的行为示例
         ├── evals.md            # 回归用例集，改动合并前要跑
@@ -210,6 +224,7 @@ research-field-onboarding/
         ├── citations.md        # 已验证 / 未核实规则
         ├── checkpoints.md      # 检查点题型与分支
         ├── decode-mode.md      # 处理贴进来的文本
+        ├── state-runtime.md    # 能力检查与内部状态流程
         ├── anti-patterns.md    # 这个 skill 曾经怎么坏掉
         └── search-recipes.md   # 用于验证的开放接口查询模板         # 正向与负向的行为示例
 ```
@@ -229,6 +244,13 @@ research-field-onboarding/
 - Agent 缺少联网、文件访问或交互能力时，优雅降级而不是失效。
 
 ## 更新记录
+
+### v1.6.0
+
+- **新增可选的 agent 内部状态管理。** 具备运行条件的 agent 可以使用零依赖的 `scripts/knowledge_state.py`，在多轮引导中维护学习阶梯，同时不向学习者暴露命令、JSON 或存储细节。
+- **保持 Skill 可移植。** 没有 Python 或临时文件权限时自动退回原有的纯 prompt 行为；一次性解释不会启动状态运行时。
+- **让进度可以验证。** 状态模型分别记录用户自述、证据和覆盖进度，检查前置依赖与环路，采用原子写入，并支持幂等操作 ID。
+- **补齐运行说明和测试。** 新增 `references/state-runtime.md`、正负例评测项和确定性的单元测试。
 
 ### v1.5.0
 

@@ -27,8 +27,9 @@ Useful contributions include:
 3. Edit the relevant file. Keep core behavior in `field-onboarding/SKILL.md` and longer examples in `field-onboarding/references/examples.md`.
 4. Check that the instructions remain tool-agnostic unless a tool-specific section is explicitly required.
 5. Validate the skill with the available Skill validator/packager.
-6. Run the relevant cases from `field-onboarding/references/evals.md` in a fresh session, and paste the result table into the PR. A change to trigger scope or to a core rule needs at least five negatives and five positives.
-7. If the change widens what the skill fires on, add a negative case to `field-onboarding/references/examples.md` showing a prompt it should still decline to take over.
+6. If `field-onboarding/scripts/knowledge_state.py` changes, run `python -m unittest tools.test_knowledge_state -v`.
+7. Run the relevant cases from `field-onboarding/references/evals.md` in a fresh session, and paste the result table into the PR. A change to trigger scope or to a core rule needs at least five negatives and five positives.
+8. If the change widens what the skill fires on, add a negative case to `field-onboarding/references/examples.md` showing a prompt it should still decline to take over.
 8. If the change touches how literature is named, check it against the **Naming literature** rule in `SKILL.md`: verified with a checkable identifier, or explicitly labelled `from memory, unverified`, with no third option.
 9. Open a pull request explaining the problem, the change, and the test prompt/result.
 

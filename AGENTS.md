@@ -14,8 +14,8 @@ lives in `field-onboarding/SKILL.md`.
 
 If a user has asked you to install this skill, do the following. The skill root
 is the directory `field-onboarding/`, which contains `SKILL.md` at its top level
-plus an `agents/` and a `references/` directory. Keep that structure intact;
-`SKILL.md` resolves its references relative to its own location.
+plus `agents/`, `references/`, and `scripts/` directories. Keep that structure
+intact; `SKILL.md` resolves its optional resources relative to its own location.
 
 Pick the case that matches your environment.
 
@@ -46,7 +46,8 @@ directory.** Copy `field-onboarding/` into whatever directory that agent reads
 skills from, preserving the folder structure.
 
 **Anything else.** Use `field-onboarding/SKILL.md` directly as the instruction
-file. The references are optional; load them when `SKILL.md` points at them.
+file. References and scripts are optional; use them when `SKILL.md` points at
+them and the environment supports them.
 
 After installing, verify it by asking a question that should trigger it, for
 example "guide me into topological photonics step by step". A correct response
@@ -97,6 +98,9 @@ as follows:
   and frontier claims before presenting them as current.
 - **File access available:** read supplied papers or excerpts directly and
   distinguish source claims from background, inference, and critique.
+- **Python and temporary file access available:** for a multi-turn ladder, use
+  the bundled state helper invisibly. Never make the user operate it. Store
+  session state temporarily unless the user explicitly asks to keep it.
 - **No external tools:** perform conceptual onboarding from the provided
   context, flag anything that would require verification, and give search
   pointers (venue, group, query) instead of citations that cannot be checked.
@@ -134,6 +138,9 @@ as follows:
 After modifying the skill, run the relevant cases from
 `field-onboarding/references/evals.md` in a fresh session. A change to trigger
 scope or to a core rule needs at least five negative and five positive cases.
+
+If `field-onboarding/scripts/knowledge_state.py` changes, also run
+`python -m unittest tools.test_knowledge_state -v`.
 
 A valid distributable archive contains one skill folder with `SKILL.md` at its
 root.

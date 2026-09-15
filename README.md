@@ -4,7 +4,7 @@
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"/></a>
-<img src="https://img.shields.io/badge/version-v1.5.0-blue?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-v1.6.0-blue?style=flat-square" alt="Version"/>
 <a href="https://github.com/ljx-chase/research-field-onboarding/stargazers"><img src="https://img.shields.io/github/stars/ljx-chase/research-field-onboarding?style=flat-square&color=yellow" alt="Stars"/></a>
 <img src="https://img.shields.io/github/last-commit/ljx-chase/research-field-onboarding/main?style=flat-square" alt="Last Commit"/>
 </p>
@@ -39,6 +39,10 @@ npx skills add ljx-chase/research-field-onboarding -g
 
 Claude web and ChatGPT want a zip; there is one in
 [releases](https://github.com/ljx-chase/research-field-onboarding/releases).
+
+That is the whole setup. Users never run the bundled state script or edit its
+JSON; capable agents use it internally, and other agents fall back to the same
+prompt workflow.
 
 Then try:
 
@@ -284,6 +288,8 @@ research-field-onboarding/
     ├── SKILL.md                # the canonical instruction document
     ├── agents/
     │   └── openai.yaml
+    ├── scripts/
+    │   └── knowledge_state.py  # optional invisible session-state helper
     └── references/
         ├── examples.md         # positive and negative behavioral examples
         ├── evals.md            # regression set, run before merging a change
@@ -292,6 +298,7 @@ research-field-onboarding/
         ├── citations.md        # the verified / unverified rule
         ├── checkpoints.md      # question types and branching
         ├── decode-mode.md      # handling supplied text
+        ├── state-runtime.md    # capability gate and internal state workflow
         ├── anti-patterns.md    # ways this has failed
         └── search-recipes.md   # open-API query templates for verification
 ```
@@ -315,6 +322,13 @@ research-field-onboarding/
   interactivity.
 
 ## Changelog
+
+### v1.6.0
+
+- **Added optional agent-managed state.** Capable agents can use the dependency-free `scripts/knowledge_state.py` helper to track a multi-turn learning ladder without exposing commands, JSON, or storage details to the learner.
+- **Kept the skill portable.** Agents without Python or temporary-file access fall back to the existing prompt-only behavior, and one-turn explanations do not start the runtime.
+- **Made progress auditable.** The state model separates self-report, evidence, and coverage; validates prerequisites and cycles; writes atomically; and supports idempotent operation IDs.
+- **Added runtime guidance and tests.** `references/state-runtime.md`, positive and negative eval cases, and deterministic unit tests document and verify the new behavior.
 
 ### v1.5.0
 

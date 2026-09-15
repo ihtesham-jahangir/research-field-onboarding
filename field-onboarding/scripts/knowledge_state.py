@@ -1,0 +1,391 @@
+#!/usr/bin/env python3
+"""Optional, dependency-free session state for the Field Onboarding skill.
+
+This is an agent-facing helper. End users should never need to invoke it or
+edit its JSON files themselves.
+"""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import json
+import os
+import tempfile
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+
+VERSION = "0.1.0"
+SELF_REPORTS = {"used", "learned", "new"}
+EVIDENCE = {"untested", "pass", "partial", "fail"}
+PROGRESS = {"queued", "active", "covered"}
+FIELD_STATUS = {"unknown", "settled", "emerging", "contested"}
+
+
+class StateError(ValueError):
+    pass
+
+
+def initial_state(
+    session_id: str,
+    field: str,
+    goal: str,
+    artifact: str | None = None,
+    language: str | None = None,
+) -> dict[str, Any]:
+    state = {
+        "version": VERSION,
+        "session_id": required_text(session_id, "session_id"),
+        "target": {
+            "field": required_text(field, "field"),
+            "goal": required_text(goal, "goal"),
+            "artifact": artifact,
+        },
+        "language": language,
+        "field_status": "unknown",
+        "concepts": {},
+        "current_concept": None,
+        "events": [],
+    }
+    validate(state)
+    return state
+
+
+def load(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        state = json.load(handle)
+    validate(state)
+    return state
+
+
+def save(state: dict[str, Any], path: Path) -> None:
+    validate(state)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
+    )
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(state, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+        os.replace(temporary, path)
+    except BaseException:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
+
+
+def validate(state: dict[str, Any]) -> None:
+    if not isinstance(state, dict):
+        raise StateError("state must be an object")
+    if state.get("version") != VERSION:
+        raise StateError(f"unsupported state version: {state.get('version')}")
+    required_text(state.get("session_id"), "session_id")
+    target = state.get("target")
+    if not isinstance(target, dict):
+        raise StateError("target must be an object")
+    required_text(target.get("field"), "target.field")
+    required_text(target.get("goal"), "target.goal")
+    if target.get("artifact") is not None and not isinstance(target["artifact"], str):
+        raise StateError("target.artifact must be a string or null")
+    if state.get("field_status") not in FIELD_STATUS:
+        raise StateError(f"invalid field status: {state.get('field_status')}")
+
+    concepts = state.get("concepts")
+    if not isinstance(concepts, dict):
+        raise StateError("concepts must be an object")
+    for concept_id, concept in concepts.items():
+        required_text(concept_id, "concept_id")
+        if not isinstance(concept, dict):
+            raise StateError(f"concept {concept_id!r} must be an object")
+        required_text(concept.get("label"), f"{concept_id}.label")
+        if concept.get("self_report") not in SELF_REPORTS:
+            raise StateError(f"invalid self_report for {concept_id!r}")
+        if concept.get("evidence") not in EVIDENCE:
+            raise StateError(f"invalid evidence for {concept_id!r}")
+        if concept.get("progress") not in PROGRESS:
+            raise StateError(f"invalid progress for {concept_id!r}")
+        prerequisites = concept.get("prerequisites")
+        if not isinstance(prerequisites, list) or not all(
+            isinstance(item, str) and item for item in prerequisites
+        ):
+            raise StateError(f"invalid prerequisites for {concept_id!r}")
+        if len(prerequisites) != len(set(prerequisites)):
+            raise StateError(f"duplicate prerequisite for {concept_id!r}")
+        for prerequisite in prerequisites:
+            if prerequisite not in concepts:
+                raise StateError(
+                    f"{concept_id!r} references missing prerequisite {prerequisite!r}"
+                )
+        misconceptions = concept.get("misconceptions")
+        if not isinstance(misconceptions, list) or not all(
+            isinstance(item, str) and item for item in misconceptions
+        ):
+            raise StateError(f"invalid misconceptions for {concept_id!r}")
+    reject_cycles(concepts)
+
+    current = state.get("current_concept")
+    if current is not None and current not in concepts:
+        raise StateError(f"unknown current concept: {current}")
+    active = [key for key, value in concepts.items() if value["progress"] == "active"]
+    if len(active) > 1 or active != ([] if current is None else [current]):
+        raise StateError("current_concept must match the only active concept")
+    if not isinstance(state.get("events"), list):
+        raise StateError("events must be an array")
+
+
+def add_concept(
+    state: dict[str, Any],
+    concept_id: str,
+    label: str,
+    self_report: str,
+    prerequisites: list[str],
+) -> None:
+    concept_id = required_text(concept_id, "concept_id")
+    if self_report not in SELF_REPORTS:
+        raise StateError(f"invalid self_report: {self_report}")
+    if concept_id in prerequisites:
+        raise StateError("a concept cannot depend on itself")
+    missing = [item for item in prerequisites if item not in state["concepts"]]
+    if missing:
+        raise StateError(f"missing prerequisites: {', '.join(missing)}")
+    candidate = copy.deepcopy(state)
+    existing = candidate["concepts"].get(concept_id)
+    if existing:
+        existing.update(
+            label=required_text(label, "label"),
+            self_report=self_report,
+            prerequisites=list(dict.fromkeys(prerequisites)),
+        )
+    else:
+        candidate["concepts"][concept_id] = {
+            "label": required_text(label, "label"),
+            "self_report": self_report,
+            "evidence": "untested",
+            "progress": "covered" if self_report == "used" else "queued",
+            "prerequisites": list(dict.fromkeys(prerequisites)),
+            "misconceptions": [],
+        }
+    validate(candidate)
+    state.clear()
+    state.update(candidate)
+
+
+def ready_concepts(state: dict[str, Any]) -> list[str]:
+    validate(state)
+    return sorted(
+        concept_id
+        for concept_id, concept in state["concepts"].items()
+        if concept["progress"] == "queued"
+        and all(satisfied(state["concepts"][item]) for item in concept["prerequisites"])
+    )
+
+
+def activate(state: dict[str, Any], concept_id: str) -> None:
+    if concept_id not in state["concepts"]:
+        raise StateError(f"unknown concept: {concept_id}")
+    blocked = [
+        item
+        for item in state["concepts"][concept_id]["prerequisites"]
+        if not satisfied(state["concepts"][item])
+    ]
+    if blocked:
+        raise StateError(f"concept is blocked by: {', '.join(blocked)}")
+    for concept in state["concepts"].values():
+        if concept["progress"] == "active":
+            concept["progress"] = "queued"
+    state["concepts"][concept_id]["progress"] = "active"
+    state["current_concept"] = concept_id
+    validate(state)
+
+
+def record_checkpoint(
+    state: dict[str, Any], concept_id: str, result: str, misconceptions: list[str]
+) -> None:
+    if concept_id not in state["concepts"]:
+        raise StateError(f"unknown concept: {concept_id}")
+    if result not in {"pass", "partial", "fail"}:
+        raise StateError(f"invalid checkpoint result: {result}")
+    concept = state["concepts"][concept_id]
+    concept["evidence"] = result
+    concept["misconceptions"] = list(dict.fromkeys(misconceptions))
+    concept["progress"] = "covered" if result == "pass" else "active"
+    if result == "pass":
+        if state["current_concept"] == concept_id:
+            state["current_concept"] = None
+    else:
+        for key, item in state["concepts"].items():
+            if key != concept_id and item["progress"] == "active":
+                item["progress"] = "queued"
+        state["current_concept"] = concept_id
+    validate(state)
+
+
+def satisfied(concept: dict[str, Any]) -> bool:
+    if concept["evidence"] == "pass":
+        return True
+    if concept["evidence"] in {"partial", "fail"}:
+        return False
+    return concept["self_report"] == "used" or concept["progress"] == "covered"
+
+
+def reject_cycles(concepts: dict[str, dict[str, Any]]) -> None:
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(concept_id: str) -> None:
+        if concept_id in visiting:
+            raise StateError(f"dependency cycle includes {concept_id!r}")
+        if concept_id in visited:
+            return
+        visiting.add(concept_id)
+        for prerequisite in concepts[concept_id]["prerequisites"]:
+            visit(prerequisite)
+        visiting.remove(concept_id)
+        visited.add(concept_id)
+
+    for concept_id in concepts:
+        visit(concept_id)
+
+
+def record_event(
+    state: dict[str, Any], event_type: str, payload: dict[str, Any], operation_id: str | None
+) -> bool:
+    event_id = operation_id or str(uuid.uuid4())
+    if any(event.get("id") == event_id for event in state["events"]):
+        return False
+    state["events"].append(
+        {
+            "id": event_id,
+            "type": event_type,
+            "at": datetime.now(timezone.utc).isoformat(),
+            "payload": payload,
+        }
+    )
+    return True
+
+
+def required_text(value: Any, name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise StateError(f"{name} must be a non-empty string")
+    return value.strip()
+
+
+def parser() -> argparse.ArgumentParser:
+    root = argparse.ArgumentParser(description=__doc__)
+    commands = root.add_subparsers(dest="command", required=True)
+
+    init = commands.add_parser("init")
+    init.add_argument("state", type=Path)
+    init.add_argument("--session-id", required=True)
+    init.add_argument("--field", required=True)
+    init.add_argument("--goal", required=True)
+    init.add_argument("--artifact")
+    init.add_argument("--language")
+    init.add_argument("--force", action="store_true")
+
+    validate_command = commands.add_parser("validate")
+    validate_command.add_argument("state", type=Path)
+
+    add = commands.add_parser("add")
+    add.add_argument("state", type=Path)
+    add.add_argument("--id", required=True)
+    add.add_argument("--label", required=True)
+    add.add_argument("--self-report", choices=sorted(SELF_REPORTS), required=True)
+    add.add_argument("--requires", action="append", default=[])
+    add.add_argument("--operation-id")
+
+    field_status = commands.add_parser("set-field-status")
+    field_status.add_argument("state", type=Path)
+    field_status.add_argument("--status", choices=sorted(FIELD_STATUS), required=True)
+    field_status.add_argument("--operation-id")
+
+    next_command = commands.add_parser("next")
+    next_command.add_argument("state", type=Path)
+
+    activate_command = commands.add_parser("activate")
+    activate_command.add_argument("state", type=Path)
+    activate_command.add_argument("--id", required=True)
+    activate_command.add_argument("--operation-id")
+
+    checkpoint = commands.add_parser("checkpoint")
+    checkpoint.add_argument("state", type=Path)
+    checkpoint.add_argument("--id", required=True)
+    checkpoint.add_argument("--result", choices=["pass", "partial", "fail"], required=True)
+    checkpoint.add_argument("--misconception", action="append", default=[])
+    checkpoint.add_argument("--operation-id")
+
+    summary = commands.add_parser("summary")
+    summary.add_argument("state", type=Path)
+    return root
+
+
+def main() -> int:
+    args = parser().parse_args()
+    if args.command == "init":
+        if args.state.exists() and not args.force:
+            raise StateError(f"state already exists: {args.state}")
+        state = initial_state(
+            args.session_id, args.field, args.goal, args.artifact, args.language
+        )
+        save(state, args.state)
+        print(json.dumps({"state": str(args.state), "status": "initialized"}))
+        return 0
+
+    state = load(args.state)
+    if args.command == "validate":
+        print(json.dumps({"status": "valid", "version": state["version"]}))
+    elif args.command == "next":
+        print(json.dumps({"ready": ready_concepts(state)}, ensure_ascii=False))
+    elif args.command == "summary":
+        print(
+            json.dumps(
+                {
+                    "target": state["target"],
+                    "field_status": state["field_status"],
+                    "current_concept": state["current_concept"],
+                    "ready": ready_concepts(state),
+                    "concepts": state["concepts"],
+                },
+                ensure_ascii=False,
+            )
+        )
+    else:
+        operation_id = args.operation_id
+        if operation_id and any(
+            event.get("id") == operation_id for event in state["events"]
+        ):
+            print(json.dumps({"status": "already-applied", "operation_id": operation_id}))
+            return 0
+        if args.command == "add":
+            add_concept(state, args.id, args.label, args.self_report, args.requires)
+            event_type = "concept.upserted"
+            payload = {"concept_id": args.id}
+        elif args.command == "set-field-status":
+            state["field_status"] = args.status
+            event_type = "field_status.set"
+            payload = {"status": args.status}
+        elif args.command == "activate":
+            activate(state, args.id)
+            event_type = "concept.activated"
+            payload = {"concept_id": args.id}
+        elif args.command == "checkpoint":
+            record_checkpoint(state, args.id, args.result, args.misconception)
+            event_type = "checkpoint.recorded"
+            payload = {"concept_id": args.id, "result": args.result}
+        record_event(state, event_type, payload, operation_id)
+        save(state, args.state)
+        print(json.dumps({"status": "applied", "operation": event_type}))
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except StateError as error:
+        raise SystemExit(f"state error: {error}") from error

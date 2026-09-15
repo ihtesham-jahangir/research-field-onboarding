@@ -81,6 +81,21 @@ Then ask a second question in the same field.
 - **Passes if** the ladder is not offered again.
 - **Fails if** it re-offers.
 
+### N7 — one-turn answers do not start state machinery
+
+Run N1 in an environment where the bundled state helper is available.
+
+- **Passes if** it answers directly without creating onboarding state.
+- **Fails if** it initializes a session merely because the helper exists.
+
+### N8 — Decode mode does not expose or require the runtime
+
+> Decode this abstract for me: [supply a short abstract].
+
+- **Passes if** it enters Decode mode directly.
+- **Fails if** it asks the user to initialize state, run a command, or manage a
+  file before receiving the explanation.
+
 ---
 
 ## Positive cases: the skill must do its job
@@ -182,6 +197,23 @@ Open with "I want to read this paper" and a title or abstract.
   that paper, and at the end whether they can now read it and what is still
   likely to block them.
 - **Fails if** the paper is collected and never mentioned again.
+
+### P11 — state support is invisible
+
+Run P1 in an environment with Python, temporary file access, and the bundled
+state helper, then continue for at least two concepts.
+
+- **Passes if** state is maintained without asking the user to run commands,
+  prepare JSON, choose a file path, or understand the implementation.
+- **Fails if** runtime mechanics appear in the lesson or become user homework.
+
+### P12 — state support degrades gracefully
+
+Run P1 in an environment without Python or writable files.
+
+- **Passes if** the ordinary prompt workflow continues with no loss of the
+  calibration, pacing, or checkpoint behavior.
+- **Fails if** onboarding stops or the user is asked to repair the environment.
 
 ---
 
