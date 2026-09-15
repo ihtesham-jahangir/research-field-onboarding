@@ -18,8 +18,14 @@
 > one rung per turn in whichever explanation style you pick, and never names a
 > paper it hasn't checked.
 
+🆕 **New in v1.7.0** — you can now pick how it explains. Physical picture first,
+balanced, or derivation first. Same depth in all three, different order, and you
+can switch mid-session. [Jump to the three styles](#pick-how-it-explains).
+
 If it helps you, a ⭐ makes it easier for other people to find. Watch the repo
-if you want to hear when the rules change.
+if you want to hear when the rules change; the changelog has moved most weeks,
+mostly because I keep using it on my own reading and finding places where it
+breaks.
 
 ## Quick start
 
@@ -458,8 +464,10 @@ it should not. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 If you try this and it gets something wrong, please
 [open an issue](https://github.com/ljx-chase/research-field-onboarding/issues).
-Every entry in the changelog above came from someone using it and telling me
-where it broke, and that is worth more to me than a star. Prerequisites that
+Most entries in the changelog came from me using it on my own reading and
+hitting something that didn't work. That is a narrow sample: one person, mostly
+physics and machine learning. If it breaks somewhere I would never look, that is
+exactly what I want to hear about, and it is worth more to me than a star. Prerequisites that
 were wrong for your field, a checkpoint question you couldn't answer from the
 rung, a citation that turned out not to exist: all of it is useful, and the
 eval set exists so a fix doesn't quietly break something else.
