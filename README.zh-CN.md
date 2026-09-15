@@ -4,7 +4,7 @@
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"/></a>
-<img src="https://img.shields.io/badge/version-v1.6.0-blue?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-v1.7.0-blue?style=flat-square" alt="Version"/>
 <a href="https://github.com/ljx-chase/research-field-onboarding/stargazers"><img src="https://img.shields.io/github/stars/ljx-chase/research-field-onboarding?style=flat-square&color=yellow" alt="Stars"/></a>
 <img src="https://img.shields.io/github/last-commit/ljx-chase/research-field-onboarding/main?style=flat-square" alt="Last Commit"/>
 </p>
@@ -81,6 +81,8 @@ npx skills add ljx-chase/research-field-onboarding -g
 > - **Embedding 和序列表示** — 文本如何变成模型可以处理的向量
 >
 > `用过` / `学过` / `没接触`
+>
+> 讲解方式：**1 物理图像优先（默认）/ 2 图像与推导并重 / 3 严格推导优先**。如果没有出现按钮，回复数字即可。
 
 *十二个术语，它只问了其中四个，而不是把十二个一次性全甩给你。然后从你实际所在的位置开始，一次只往上讲一级。*
 
@@ -100,11 +102,13 @@ npx skills add ljx-chase/research-field-onboarding -g
 
 **1. 前置概念由它来列。** 不是问「你什么背景」，你看不见的知识缺口自己没法审计。Agent 自己算出这个话题真正依赖的三到五个上游框架，每项配一句话解释，让你把每项标成**用过**、**学过**或**没接触**。然后它真的会用这些标记：标了用过的直接当锚点、绝不重讲；讲不完的明确声明为黑箱；承重的缺口先补上，再往上搭。
 
-**2. 一次只讲一级。** 动机、词汇、核心框架、方法、前沿。每级一轮，结尾出一道真的诊断题——预测、复述、或者二选一——而不是「听懂了吗」，那个问题永远得到「懂了」。答错了换个角度重讲，不是把同一段说得更大声。
+**2. 把讲解风格和技术层级分开。** 可以选择物理图像优先、图像与推导并重、严格推导优先。默认把你当作「有研究能力、但刚进入这个领域的人」：术语会拆开讲，机制、假设和公式都保留。宿主提供结构化选择工具时，Agent 必须真的调用；没有时只需回复一个数字。
 
-**3. 它不会编文献。** 阅读路径是模型最容易凭空捏造的地方，一个标题合理、年份也合理的假文献，够你白找一下午。每一篇被点名的文献要么本轮检索验证过并给出 DOI 或 arXiv 号，要么明确标注 `from memory, unverified`。没有第三种，也绝不附上没有真正检索到的标识符。
+**3. 一次只讲一级。** 动机、词汇、核心框架、方法、前沿。每级一轮，结尾出一道真的诊断题——预测、复述、或者二选一——而不是「听懂了吗」，那个问题永远得到「懂了」。答错了换个角度重讲，不是把同一段说得更大声。
 
-**4. 它知道什么时候该闭嘴。** 问一个窄的事实问题，就得到一个窄的回答。阶梯只在结尾用一句话提一次，你不接就不再提。
+**4. 它不会编文献。** 阅读路径是模型最容易凭空捏造的地方，一个标题合理、年份也合理的假文献，够你白找一下午。每一篇被点名的文献要么本轮检索验证过并给出 DOI 或 arXiv 号，要么明确标注 `from memory, unverified`。没有第三种，也绝不附上没有真正检索到的标识符。
+
+**5. 它知道什么时候该闭嘴。** 问一个窄的事实问题，就得到一个窄的回答。阶梯只在结尾用一句话提一次，你不接就不再提。
 
 ## 更适合谁
 
@@ -244,6 +248,13 @@ research-field-onboarding/
 - Agent 缺少联网、文件访问或交互能力时，优雅降级而不是失效。
 
 ## 更新记录
+
+### v1.7.0
+
+- **新增三种讲解风格：**物理图像优先（默认）、图像与推导并重、严格推导优先。名称只表示教学顺序，不模仿某位作者的文风。
+- **把清楚和浅薄分开。** 默认面向「有研究能力、但刚进入这个领域的人」：解释领域术语，同时保留公式、假设、尺度和适用边界。
+- **强化交互式 intake。** 有可调用的结构化选择工具时必须真正调用；没有时提供只需回复一个数字的兜底选项。
+- **在内部状态中保存偏好。** 可选状态助手现在记录讲解风格和技术层级，支持中途切换，并增加对应回归测试。
 
 ### v1.6.0
 
