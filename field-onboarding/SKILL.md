@@ -10,7 +10,9 @@ losing them.
 
 The failure this skill exists to prevent: answering a beginner's question at the
 level of a specialist, so the answer is technically correct and completely
-useless.## When not to use this skill
+useless.
+
+## When not to use this skill
 
 This is a teaching mode, not a default. Running the full ladder on someone who
 wanted one sentence is its own failure, and a more irritating one than pitching
@@ -49,23 +51,27 @@ costs them a turn and their patience.
 3. **Anchor to what they know.** Explain the new field in terms of the user's
    existing expertise. Map new concept onto familiar concept, then immediately
    say where the mapping breaks.
-4. **Be explicit about confidence.** Mark what is settled, what is contested,
+4. **Plain is not shallow.** Default to a capable researcher who is new to this
+   field. Define field-specific language, but preserve the real mechanism,
+   assumptions, scales, and equations. Never turn “simple” into childish or
+   remove the formal content that makes the explanation true.
+5. **Be explicit about confidence.** Mark what is settled, what is contested,
    and what you are unsure of. Do not flatten real disagreement in the
    literature, and do not dress a strong consensus up as an open question.
    "Some argue X, others Y" with no indication of where the weight of evidence
    sits is not balance, it is abdication.
-5. **Search before teaching.** If the field is fast-moving, or the user names a
+6. **Search before teaching.** If the field is fast-moving, or the user names a
    specific paper, method, material, dataset, or software package, search
    first. Do not teach a five-year-old snapshot as current.
-6. **State your conventions.** Where a field uses competing sign, phase, unit,
+7. **State your conventions.** Where a field uses competing sign, phase, unit,
    or normalization conventions, say which one you are using and name the
    alternative the literature also uses. A reader who cannot map your equation
    onto the paper's equation has not been onboarded. This costs one clause and
    prevents the single most common silent failure in physical-science reading.
-7. **Never invent a reference.** Every named work is either verified in this
+8. **Never invent a reference.** Every named work is either verified in this
    session or explicitly marked unverified. See "Naming literature".
-8. **Match the user's language.** Reply in whatever language they wrote in.
-9. **Preserve the source when decoding.** Keep what the source claims separate
+9. **Match the user's language.** Reply in whatever language they wrote in.
+10. **Preserve the source when decoding.** Keep what the source claims separate
    from background, inference, and your own critique.
 
 ## Step 0 — Locate them (one short turn)
@@ -86,13 +92,34 @@ Then ask them to mark each one:
 - **new** — no real contact
 
 Present this as a short checklist, one line per prerequisite, with a one-clause
-gloss so they can tell what each item means. Render it with an interactive
-checklist or multi-select control whenever the interface has one. Fall back to a
-plain table only when it does not. Printing marks the user has to type back when
-they could have tapped them is a cost you imposed for nothing, and it is the
-most common way this step gets half-done.
+gloss so they can tell what each item means.
 
-**Second, check how settled the field is.** Do this before you teach, because
+**Use a real choice control when one is callable.** Inspect the tools or
+interaction mechanisms actually available in the current environment. If a
+structured user-input, checklist, quiz, or elicitation tool is callable, call it
+for these choices; do not merely print options and say a control would be nice.
+Use successive controls when one control cannot hold every prerequisite. Do not
+infer that a control is callable just because the app is graphical. If no such
+mechanism is available, use a numbered compact fallback and accept an answer
+such as `1 used, 2 learned, 3 new`; never require a prose background essay.
+
+**Second, choose the explanation style.** Keep this separate from the user's
+knowledge level. Offer exactly three choices, using the same structured control
+when available:
+
+1. **Physical picture first (default)** — intuition, geometry, limiting cases,
+   and concrete phenomena first; then equations with every term interpreted.
+2. **Balanced** — intuition and formalism advance together.
+3. **Derivation first** — definitions, assumptions, and mathematical steps
+   first; physical interpretation after the derivation.
+
+These are teaching priorities, not intelligence levels. If the user does not
+choose, use option 1. If they already stated a preference, preserve it and do
+not ask again. Load
+[references/explanation-styles.md](references/explanation-styles.md) before
+Rung 1 and follow the selected mode. The user may switch modes at any time.
+
+**Third, check how settled the field is.** Do this before you teach, because
 it decides which mode you are in. Search if you can. If you cannot search, say
 so and reason from what you have, out loud.
 
@@ -292,6 +319,7 @@ not up front.
 | `references/search-recipes.md` | You need to verify something, or to hand over a query |
 | `references/checkpoints.md` | Before the first checkpoint |
 | `references/decode-mode.md` | The user supplied text instead of a field |
+| `references/explanation-styles.md` | Before Rung 1, once the explanation style is known |
 | `references/state-runtime.md` | A multi-turn ladder can use local Python and temporary files |
 | `references/anti-patterns.md` | Reviewing your own output |
 | `references/examples.md` | An example would settle how a rule applies |

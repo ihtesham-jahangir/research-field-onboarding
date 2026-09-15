@@ -41,6 +41,29 @@ class KnowledgeStateTests(unittest.TestCase):
     def test_initial_state_is_valid(self) -> None:
         state_runtime.validate(self.state)
         self.assertEqual("unknown", self.state["field_status"])
+        self.assertEqual(
+            {
+                "explanation_style": "physical-picture",
+                "technical_register": "peer-new-to-field",
+            },
+            self.state["preferences"],
+        )
+
+    def test_preferences_can_change_independently(self) -> None:
+        state_runtime.set_preferences(self.state, explanation_style="derivation-first")
+        self.assertEqual(
+            "derivation-first", self.state["preferences"]["explanation_style"]
+        )
+        self.assertEqual(
+            "peer-new-to-field", self.state["preferences"]["technical_register"]
+        )
+
+    def test_invalid_preferences_do_not_mutate_state(self) -> None:
+        before = self.state.copy()
+        before["preferences"] = self.state["preferences"].copy()
+        with self.assertRaisesRegex(state_runtime.StateError, "invalid explanation"):
+            state_runtime.set_preferences(self.state, explanation_style="baby-talk")
+        self.assertEqual(before, self.state)
 
     def test_used_anchor_is_covered_but_untested(self) -> None:
         self.add("berry-phase", "used")

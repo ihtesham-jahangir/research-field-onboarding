@@ -22,7 +22,8 @@ Instead pick one:
 - Ask them to predict something: "what happens to the signal if X doubles?"
 - Ask them to restate the core idea in their own words.
 - Give a two-question multiple-choice check on the rung just covered. Render it
-  with an interactive quiz control whenever the interface has one.
+  by actually calling a structured quiz or user-input tool when one is callable;
+  otherwise accept a single letter or number.
 - Ask them to spot which of two statements is the field's actual claim.
 
 Then branch:

@@ -4,7 +4,7 @@
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"/></a>
-<img src="https://img.shields.io/badge/version-v1.6.0-blue?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-v1.7.0-blue?style=flat-square" alt="Version"/>
 <a href="https://github.com/ljx-chase/research-field-onboarding/stargazers"><img src="https://img.shields.io/github/stars/ljx-chase/research-field-onboarding?style=flat-square&color=yellow" alt="Stars"/></a>
 <img src="https://img.shields.io/github/last-commit/ljx-chase/research-field-onboarding/main?style=flat-square" alt="Last Commit"/>
 </p>
@@ -82,6 +82,9 @@ again and you get more terms.
 > - **Embeddings and sequence representation** — how text becomes vectors the model can work on
 >
 > `used it` / `learned it` / `new`
+>
+> Teaching style: **1 physical picture first (default) / 2 balanced / 3
+> derivation first**. If no buttons appear, reply with the number.
 
 *Twelve terms. It asks about four of them instead of throwing all twelve at you at once, then teaches from wherever you actually are, one rung per turn.*
 
@@ -104,18 +107,19 @@ asking where you are standing before it starts pointing.
 
 ## The rules
 
-Nine rules. Full text in
+Ten rules. Full text in
 [SKILL.md](field-onboarding/SKILL.md).
 
 1. Name the prerequisites yourself, don't ask "what's your background".
 2. Anything marked *used it* is an anchor and never gets explained again.
-3. One rung per turn: motivation, vocabulary, framework, methods, frontier.
-4. End each rung with a question the rung itself answers, not "make sense?".
-5. Say where the analogy breaks, every time you use one.
-6. State which sign, unit or normalization convention you are using.
-7. Verified with a DOI, or labelled "from memory, unverified". No third option.
-8. Say whether the field is settled before teaching it as if it were.
-9. Answer short questions short. Offer the ladder once, then drop it.
+3. Separate style from level; plain language must keep the real science.
+4. One rung per turn: motivation, vocabulary, framework, methods, frontier.
+5. End each rung with a question the rung itself answers, not "make sense?".
+6. Say where the analogy breaks, every time you use one.
+7. State which sign, unit or normalization convention you are using.
+8. Verified with a DOI, or labelled "from memory, unverified". No third option.
+9. Say whether the field is settled before teaching it as if it were.
+10. Answer short questions short. Offer the ladder once, then drop it.
 
 ## What it does differently
 
@@ -126,18 +130,24 @@ asks you to mark each as *used it*, *learned it*, or *new*. Then it uses the
 marks: anchors are never re-taught, black boxes are declared as black boxes, and
 a load-bearing gap gets built before anything stands on it.
 
-**2. It teaches one rung at a time.** Motivation, vocabulary, core framework,
+**2. It separates teaching style from technical level.** Choose physical-picture
+first, balanced, or derivation-first. The default treats you as a capable
+researcher entering a new field: jargon is unpacked, while mechanisms,
+assumptions, and equations stay. If the host exposes a structured choice tool,
+the agent must call it; otherwise you can reply with a single number.
+
+**3. It teaches one rung at a time.** Motivation, vocabulary, core framework,
 methods, frontier. Each rung is one turn and ends with a real diagnostic — a
 prediction, a restatement, a forced choice — not "does that make sense?", which
 always gets a yes. Wrong answers get a different explanation, not a louder one.
 
-**3. It will not invent a reference.** Reading paths are where models fabricate,
+**4. It will not invent a reference.** Reading paths are where models fabricate,
 and a plausible title with a plausible year costs you an afternoon. Every named
 work is either verified in-session with a DOI or arXiv ID, or explicitly labelled
 `from memory, unverified`. There is no third option, and an identifier that was
 not retrieved is never attached.
 
-**4. It knows when to stay out of the way.** Ask a narrow factual question and
+**5. It knows when to stay out of the way.** Ask a narrow factual question and
 you get a narrow factual answer. The ladder is offered once, in one line, and
 dropped if you do not take it.
 
@@ -322,6 +332,13 @@ research-field-onboarding/
   interactivity.
 
 ## Changelog
+
+### v1.7.0
+
+- **Added three explanation styles:** physical-picture first (default), balanced, and derivation-first. The labels describe teaching priorities rather than imitating an author's voice.
+- **Separated clarity from shallowness.** The default register is a capable researcher who is new to the field: field-specific jargon is explained while equations, assumptions, scales, and limitations remain.
+- **Hardened interactive intake.** Agents must call a structured choice tool when one is actually callable; otherwise they provide numbered choices that accept a one-character reply.
+- **Persisted teaching preferences invisibly.** The optional state helper now stores style and technical register, supports mid-session changes, and includes regression tests for the new state.
 
 ### v1.6.0
 

@@ -96,6 +96,14 @@ Run N1 in an environment where the bundled state helper is available.
 - **Fails if** it asks the user to initialize state, run a command, or manage a
   file before receiving the explanation.
 
+### N9 — one-turn answers do not open a style intake
+
+Run N1 in an interface with structured choice controls.
+
+- **Passes if** it answers directly without asking for an explanation style.
+- **Fails if** the existence of a choice tool causes an unnecessary style or
+  prerequisite questionnaire.
+
 ---
 
 ## Positive cases: the skill must do its job
@@ -120,13 +128,16 @@ Answer P1's checklist with one prerequisite marked *used it* and one marked
 - **Fails if** it explains the anchor anyway, or teaches on top of the gap
   without acknowledging it.
 
-### P3 — an interactive control is used when one exists
+### P3 — a prerequisite control is called when available
 
-Same as P1, in an interface with a checklist or multi-select control.
+Same as P1, in an environment exposing a callable structured user-input,
+checklist, or elicitation tool.
 
-- **Passes if** the prerequisites are rendered with the control.
-- **Fails if** they are printed as a static table the user has to type answers
-  to.
+- **Passes if** the agent actually calls the control for the prerequisite marks,
+  using successive controls or a compact fallback only when the tool's question
+  limit requires it.
+- **Fails if** every prerequisite is printed as a static table the user has to
+  type back despite the tool being callable.
 - This one failed in live testing when the rule was phrased as a conditional
   clause, which is why it is here.
 
@@ -214,6 +225,35 @@ Run P1 in an environment without Python or writable files.
 - **Passes if** the ordinary prompt workflow continues with no loss of the
   calibration, pacing, or checkpoint behavior.
 - **Fails if** onboarding stops or the user is asked to repair the environment.
+
+### P13 — explanation style uses a real choice control when callable
+
+Run P1 in an environment with a structured user-input or elicitation tool.
+
+- **Passes if** the agent actually calls the tool and offers exactly the three
+  explanation styles before Rung 1.
+- **Fails if** it prints a free-form question or static options despite the
+  tool being callable.
+
+### P14 — the default is intuitive without becoming shallow
+
+Run P1, do not choose a style, and reply “go ahead” after calibration.
+
+- **Passes if** Rung 1 or the first formal rung starts from a physical picture
+  and later retains the relevant equation, assumptions, and limitations.
+- **Fails if** it opens with unexplained specialist notation, or removes the
+  formal content and substitutes a childish analogy.
+
+### P15 — level corrections change one axis
+
+After a technical explanation, reply: “Too professional; keep the equations,
+but give me the physical picture and do not talk down to me.”
+
+- **Passes if** the agent preserves the claim and equation, fills only the
+  smallest missing prerequisite, and changes the explanation order or
+  representation.
+- **Fails if** it restarts the whole ladder, deletes the mathematics, or merely
+  repeats the same explanation with simpler adjectives.
 
 ---
 

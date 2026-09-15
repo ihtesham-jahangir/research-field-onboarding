@@ -18,11 +18,13 @@ from pathlib import Path
 from typing import Any
 
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 SELF_REPORTS = {"used", "learned", "new"}
 EVIDENCE = {"untested", "pass", "partial", "fail"}
 PROGRESS = {"queued", "active", "covered"}
 FIELD_STATUS = {"unknown", "settled", "emerging", "contested"}
+EXPLANATION_STYLES = {"physical-picture", "balanced", "derivation-first"}
+TECHNICAL_REGISTERS = {"foundational", "peer-new-to-field", "specialist-bridge"}
 
 
 class StateError(ValueError):
@@ -35,6 +37,8 @@ def initial_state(
     goal: str,
     artifact: str | None = None,
     language: str | None = None,
+    explanation_style: str = "physical-picture",
+    technical_register: str = "peer-new-to-field",
 ) -> dict[str, Any]:
     state = {
         "version": VERSION,
@@ -45,6 +49,10 @@ def initial_state(
             "artifact": artifact,
         },
         "language": language,
+        "preferences": {
+            "explanation_style": explanation_style,
+            "technical_register": technical_register,
+        },
         "field_status": "unknown",
         "concepts": {},
         "current_concept": None,
@@ -93,6 +101,17 @@ def validate(state: dict[str, Any]) -> None:
     required_text(target.get("goal"), "target.goal")
     if target.get("artifact") is not None and not isinstance(target["artifact"], str):
         raise StateError("target.artifact must be a string or null")
+    preferences = state.get("preferences")
+    if not isinstance(preferences, dict):
+        raise StateError("preferences must be an object")
+    if preferences.get("explanation_style") not in EXPLANATION_STYLES:
+        raise StateError(
+            f"invalid explanation style: {preferences.get('explanation_style')}"
+        )
+    if preferences.get("technical_register") not in TECHNICAL_REGISTERS:
+        raise StateError(
+            f"invalid technical register: {preferences.get('technical_register')}"
+        )
     if state.get("field_status") not in FIELD_STATUS:
         raise StateError(f"invalid field status: {state.get('field_status')}")
 
@@ -171,6 +190,27 @@ def add_concept(
             "prerequisites": list(dict.fromkeys(prerequisites)),
             "misconceptions": [],
         }
+    validate(candidate)
+    state.clear()
+    state.update(candidate)
+
+
+def set_preferences(
+    state: dict[str, Any],
+    explanation_style: str | None = None,
+    technical_register: str | None = None,
+) -> None:
+    if explanation_style is None and technical_register is None:
+        raise StateError("at least one preference must be supplied")
+    candidate = copy.deepcopy(state)
+    if explanation_style is not None:
+        if explanation_style not in EXPLANATION_STYLES:
+            raise StateError(f"invalid explanation style: {explanation_style}")
+        candidate["preferences"]["explanation_style"] = explanation_style
+    if technical_register is not None:
+        if technical_register not in TECHNICAL_REGISTERS:
+            raise StateError(f"invalid technical register: {technical_register}")
+        candidate["preferences"]["technical_register"] = technical_register
     validate(candidate)
     state.clear()
     state.update(candidate)
@@ -287,6 +327,14 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("--goal", required=True)
     init.add_argument("--artifact")
     init.add_argument("--language")
+    init.add_argument(
+        "--style", choices=sorted(EXPLANATION_STYLES), default="physical-picture"
+    )
+    init.add_argument(
+        "--register",
+        choices=sorted(TECHNICAL_REGISTERS),
+        default="peer-new-to-field",
+    )
     init.add_argument("--force", action="store_true")
 
     validate_command = commands.add_parser("validate")
@@ -304,6 +352,12 @@ def parser() -> argparse.ArgumentParser:
     field_status.add_argument("state", type=Path)
     field_status.add_argument("--status", choices=sorted(FIELD_STATUS), required=True)
     field_status.add_argument("--operation-id")
+
+    preferences = commands.add_parser("set-preferences")
+    preferences.add_argument("state", type=Path)
+    preferences.add_argument("--style", choices=sorted(EXPLANATION_STYLES))
+    preferences.add_argument("--register", choices=sorted(TECHNICAL_REGISTERS))
+    preferences.add_argument("--operation-id")
 
     next_command = commands.add_parser("next")
     next_command.add_argument("state", type=Path)
@@ -331,7 +385,13 @@ def main() -> int:
         if args.state.exists() and not args.force:
             raise StateError(f"state already exists: {args.state}")
         state = initial_state(
-            args.session_id, args.field, args.goal, args.artifact, args.language
+            args.session_id,
+            args.field,
+            args.goal,
+            args.artifact,
+            args.language,
+            args.style,
+            args.register,
         )
         save(state, args.state)
         print(json.dumps({"state": str(args.state), "status": "initialized"}))
@@ -347,6 +407,7 @@ def main() -> int:
             json.dumps(
                 {
                     "target": state["target"],
+                    "preferences": state["preferences"],
                     "field_status": state["field_status"],
                     "current_concept": state["current_concept"],
                     "ready": ready_concepts(state),
@@ -370,6 +431,17 @@ def main() -> int:
             state["field_status"] = args.status
             event_type = "field_status.set"
             payload = {"status": args.status}
+        elif args.command == "set-preferences":
+            set_preferences(state, args.style, args.register)
+            event_type = "preferences.set"
+            payload = {
+                key: value
+                for key, value in {
+                    "explanation_style": args.style,
+                    "technical_register": args.register,
+                }.items()
+                if value is not None
+            }
         elif args.command == "activate":
             activate(state, args.id)
             event_type = "concept.activated"

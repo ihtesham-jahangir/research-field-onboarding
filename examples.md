@@ -53,6 +53,15 @@ Start with Step 0 rather than immediately teaching topology. Name a small set of
 > | Coupled-mode or tight-binding models | They provide compact models for lattices of coupled resonators or waveguides. |
 > | Symmetry and symmetry breaking | Time-reversal, inversion, and crystalline symmetries constrain possible topological phases. |
 >
+> Choose a teaching style — reply with the number if your interface does not
+> show buttons:
+>
+> 1. **Physical picture first (default):** intuition and geometry, followed by
+>    equations with each term interpreted.
+> 2. **Balanced:** physical picture and formalism advance together.
+> 3. **Derivation first:** assumptions and mathematical steps first, then the
+>    physical interpretation.
+>
 > Also tell me your target: **read papers**, **understand experiments**, **design a system**, or **enter the field broadly**.
 >
 > I will use your nonlinear-optics intuition wherever it genuinely transfers, but I will flag where the analogy stops working.
@@ -62,6 +71,8 @@ Start with Step 0 rather than immediately teaching topology. Name a small set of
 - It calibrates specific prerequisites instead of asking a vague background question.
 - It does not reteach optics the user already knows.
 - It establishes the user's target before choosing depth.
+- It separates explanation style from prior knowledge and provides a compact
+  fallback when no choice control is callable.
 - It does not dump the five-rung ladder in the first turn.
 
 ## Example 3 — Decode a dense abstract
@@ -110,6 +121,8 @@ Reply in Chinese and calibrate only prerequisites that matter for an experimenta
 > | 圆偏振光与角动量 | 实验选择定则通常需要讨论光与声子的角动量交换。 |
 > | Raman / IR selection rules | 决定哪些声子模式能通过具体光谱手段被看到。 |
 >
+> 讲解方式请选择：**1 物理图像优先（默认） / 2 图像与推导并重 / 3 严格推导优先**。无论哪种都会保留必要公式；如果界面没有按钮，回复数字即可。
+>
 > 你的实验目标我先按“**判断一个材料是否存在可测的 chiral phonon signature，并设计光学验证方案**”理解。如果你实际更偏向 time-resolved pump-probe 或 Raman，可以告诉我，我会调整路线。
 
 **Why this is good**
@@ -118,6 +131,23 @@ Reply in Chinese and calibrate only prerequisites that matter for an experimenta
 - It uses experimental optics as an anchor.
 - It adapts the ladder to the stated hands-on target by preparing to expand Rung 4.
 - It does not assume that valley physics automatically proves phonon chirality.
+
+## Example 9 — Correct the level without swinging to the other extreme
+
+**User**
+
+> 还是太专业了，但别把公式删掉，也别用幼儿园比喻。
+
+**Good response pattern**
+
+Keep the scientific target and central equation. Identify the smallest missing
+prerequisite, add one physical picture or limiting case, and interpret the terms
+before continuing the derivation. Do not restart from Rung 1, discard all
+formalism, or praise the user's intelligence.
+
+If the user instead says “太基础了”, compress already demonstrated steps and
+raise the abstraction, while retaining the physical meaning of the central
+equation.
 
 ## Example 5 — Checkpoint and branching
 

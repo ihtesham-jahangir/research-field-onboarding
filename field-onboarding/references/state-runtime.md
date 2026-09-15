@@ -27,7 +27,8 @@ asks to save their learning record.
 
 After Step 0:
 
-1. Initialize a session with the target, target artifact, and language.
+1. Initialize a session with the target, target artifact, language, selected
+   explanation style, and technical register.
 2. Set the field status.
 3. Add the 3-5 calibrated prerequisites in dependency order. Use stable,
    lowercase concept IDs. Add later concepts only when they become relevant;
@@ -45,8 +46,9 @@ Invoke the helper with the environment's Python executable:
 python <skill-root>/scripts/knowledge_state.py <command> <state-file> ...
 ```
 
-Available commands are `init`, `validate`, `add`, `set-field-status`, `next`,
-`activate`, `checkpoint`, and `summary`. Run `--help` for exact arguments.
+Available commands are `init`, `validate`, `add`, `set-field-status`,
+`set-preferences`, `next`, `activate`, `checkpoint`, and `summary`. Run `--help`
+for exact arguments.
 
 Use `--operation-id` with a stable value when retrying a mutating command. The
 same operation ID is applied at most once.
@@ -55,6 +57,7 @@ same operation ID is applied at most once.
 
 Keep these dimensions distinct:
 
+- `preferences`: explanation style and technical register selected at intake;
 - `self_report`: `used`, `learned`, or `new` from calibration;
 - `evidence`: `untested`, `pass`, `partial`, or `fail` from checkpoints;
 - `progress`: `queued`, `active`, or `covered` for workflow routing.

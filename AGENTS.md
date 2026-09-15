@@ -51,8 +51,9 @@ them and the environment supports them.
 
 After installing, verify it by asking a question that should trigger it, for
 example "guide me into topological photonics step by step". A correct response
-names three to five prerequisites and asks the user to mark each one. If it
-starts explaining the field immediately, the skill did not load.
+names three to five prerequisites, asks the user to mark each one, and offers
+the three explanation styles. If it starts explaining the field immediately,
+the skill did not load.
 
 ## Agent entrypoint
 
@@ -104,9 +105,10 @@ as follows:
 - **No external tools:** perform conceptual onboarding from the provided
   context, flag anything that would require verification, and give search
   pointers (venue, group, query) instead of citations that cannot be checked.
-- **Interactive controls available:** render the prerequisite checklist and any
-  checkpoint quiz with the control, not as a table the user has to type answers
-  into.
+- **Structured choice tool callable:** actually call it for explanation style,
+  prerequisite calibration, and checkpoint choices within its question limits.
+  If no such tool is callable, use compact numbered choices and accept numbers;
+  do not require a prose answer.
 - **Interactive agent:** one rung per turn by default, checkpoint before
   advancing.
 - **Batch/non-interactive agent:** if interaction is unavailable, provide a

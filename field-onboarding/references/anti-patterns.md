@@ -14,6 +14,11 @@ a habit is helping. Each line is a way this skill has failed or could fail.
   The user cannot audit a gap they cannot see.
 - Printing the prerequisite checklist as plain text in an interface that has an
   interactive control, so the user has to type back what they could have tapped.
+- Asking an open-ended “what explanation style do you prefer?” when three
+  tappable or numbered choices would remove the burden.
+- Treating “simple” as “remove the equations and use a childish analogy”, or
+  treating “professional” as permission to leave field-specific notation
+  unexplained.
 - Dumping all five rungs in one response because the user seems smart.
 - Analogies that are pleasant but wrong. If the analogy breaks, say exactly
   where. An analogy the user over-trusts is worse than no analogy.
