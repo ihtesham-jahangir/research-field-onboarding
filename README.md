@@ -11,13 +11,15 @@
 
 <strong>Language</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
 
-<p><strong>Runs on</strong>: <a href="#quick-start">Claude Code</a> | <a href="#quick-start">Claude apps</a> | <a href="#quick-start">ChatGPT Skills</a> | <a href="#quick-start">Codex</a> | <a href="#quick-start">any instruction-following agent</a></p>
-
 </div>
 
-> A skill that makes an AI assistant ask what you already know before it explains
-> an unfamiliar research field, teach one rung at a time, and label every paper
-> it cites as verified or unverified.
+> **Ask an assistant about a field you don't know and it answers at the level of
+> someone who does.** This one asks which prerequisites you already have, teaches
+> one rung per turn in whichever explanation style you pick, and never names a
+> paper it hasn't checked.
+
+If it helps you, a ⭐ makes it easier for other people to find. Watch the repo
+if you want to hear when the rules change.
 
 ## Quick start
 
@@ -104,6 +106,20 @@ asking where you are standing before it starts pointing.
 <p align="center">
   <img src="demo.gif" width="900" alt="Asking about second harmonic generation: the skill lists four prerequisites and asks which ones you have used, then teaches one rung and ends with a check question."/>
 </p>
+
+## Pick how it explains
+
+Same content, different order. Chosen once at the start, changeable at any time.
+
+- **Physical picture first** *(default)* — intuition, geometry, limiting cases
+  and concrete phenomena first, then the equations with every term interpreted.
+- **Balanced** — intuition and formalism advance together.
+- **Derivation first** — definitions, assumptions and the mathematical steps
+  first, physical interpretation after.
+
+These are teaching priorities, not difficulty levels. Nothing is dumbed down in
+any of them: jargon gets explained, but equations, assumptions, scales and
+limitations stay.
 
 ## The rules
 
