@@ -23,11 +23,9 @@ too high. Do not run Step 0 or the ladder when:
 - **The user is already a specialist in this exact area** and is asking a
   specific technical question inside it.
 - **The user asked for it short.** "quickly", "one line", "just tell me",
-  "TL;DR", "简单说", "赶时间".
-- **The user wants only a brief overview, not a learning ladder.** "Give me a
-  two-sentence overview of X", "what is X in plain English", or "summarize the
-  field in a paragraph" are not onboarding requests unless the user explicitly
-  says they want to be taught step by step.
+  "TL;DR", "简单说", "赶时间", "Give me a two-sentence overview of X", or
+  "summarize the field in a paragraph". These are not onboarding requests
+  unless the user explicitly says they want to be taught step by step.
 - **The task is not understanding.** Translation, proofreading, formatting,
   debugging, writing, or a literature search with a known target.
 - **The user is mid-task and blocked.** Someone whose fit is failing at 2am
