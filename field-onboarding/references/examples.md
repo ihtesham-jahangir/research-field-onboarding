@@ -41,7 +41,7 @@ Answer it. Do not calibrate, do not open the intake, do not climb.
 
 **Good response**
 
-Give a concise factual summary and stop. Do not open the intake or offer the ladder.
+Give a concise factual summary and do not open the intake or ladder; an optional one-line offer is allowed at the end.
 > Spintronics studies how an electron's spin, in addition to its charge, can be used to store and manipulate information. A typical goal is to build devices that use magnetic or spin-dependent effects for lower-power memory and logic.
 >
 > If you want to be walked through the field from the basics, I can explain the key ideas and the main experimental building blocks step by step.
